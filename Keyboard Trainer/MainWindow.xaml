@@ -1,0 +1,275 @@
+﻿<Window x:Class="Keyboard_Trainer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Keyboard_Trainer"
+        mc:Ignorable="d"
+        Title="Keyboard Trainer" Height="330" Width="700" MinHeight="200" MinWidth="300">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="IPhoneSteelBackground" EndPoint="0.5,1.272" StartPoint="0.5,0">
+            <GradientStop Color="#FF9097A3" Offset="0"/>
+            <GradientStop Color="#FF444D5B" Offset="1"/>
+        </LinearGradientBrush>
+
+        <ControlTemplate x:Key="gridBack">
+            <Grid>
+                <ContentPresenter></ContentPresenter>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <DataTrigger Binding="{Binding ElementName=checkboxStyle, Path=IsChecked}" Value="False">
+                    <Setter Property="Background" Value="{StaticResource IPhoneSteelBackground}"></Setter>
+                </DataTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="buttonTemplate" TargetType="Button">
+            <Border CornerRadius="10" BorderThickness="1" BorderBrush="Black" Background="{TemplateBinding Background}">
+                <Grid>
+                    <TextBlock VerticalAlignment="Center" Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" FontSize="{TemplateBinding FontSize}">
+                        <StackPanel Orientation="Horizontal">
+                            <ContentPresenter></ContentPresenter> 
+                        </StackPanel>
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=checkboxStyle, Path=IsChecked}" Value="True">
+                        <Setter Property="Background" Value="{StaticResource IPhoneSteelBackground}"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock>Speed: <TextBlock Name="textSpeed" FontWeight="Bold">0</TextBlock> chars/min      </TextBlock>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock>Fails: <TextBlock Name="textFails" FontWeight="Bold">0</TextBlock></TextBlock>
+                <TextBlock Grid.Column="1">Timer: <TextBlock Name="textTimer" FontWeight="Bold">0</TextBlock></TextBlock>
+            </Grid>
+
+            <CheckBox Grid.Column="0" Grid.Row="1" Name="checkboxStyle">Classic style</CheckBox>
+            
+            <TextBlock Grid.Column="2">Difficulty: <TextBlock FontWeight="Bold" Text="{Binding ElementName=sliderDifficulty, Path=Value}"/></TextBlock>
+            <Slider Grid.Column="3" Name="sliderDifficulty" Maximum="65" Minimum="5" IsSnapToTickEnabled="True"></Slider>
+            <CheckBox Grid.Column="4" Name="checkboxCaseSens">Case Sensitive</CheckBox>
+
+            <TextBlock Grid.Column="1" Grid.Row="1" Background="Maroon" Margin="2" Foreground="White">Press Enter to start!</TextBlock>
+            <Button Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Name="buttonStart" Click="buttonStart_Click">Start</Button>
+            <Button Grid.Column="4" Grid.Row="1" Name="buttonStop" IsEnabled="False" Click="buttonStop_Click">Stop</Button>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Background="Cyan" Name="textboxTask" FontSize="20"></TextBlock>
+        <TextBlock Grid.Row="2" Background="Cyan" Name="textboxAnswer" FontSize="20"></TextBlock>
+
+        
+        <Grid Grid.Row="3" Name="gridField">
+            <Grid.Resources>
+                <DropShadowEffect x:Key="DropShadowEffect" ShadowDepth="1" Direction="-90" BlurRadius="3" />
+                <SolidColorBrush x:Key="green" Color="LightGreen"></SolidColorBrush>
+                <SolidColorBrush x:Key="pink" Color="pink"></SolidColorBrush>
+                <SolidColorBrush x:Key="yellow" Color="Cornsilk"></SolidColorBrush>
+                <SolidColorBrush x:Key="blue" Color="LightBlue"></SolidColorBrush>
+                <SolidColorBrush x:Key="violet" Color="Plum"></SolidColorBrush>
+                
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="2"/>
+                    <Setter Property="Button.Effect" Value="{StaticResource DropShadowEffect}"/>
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=checkboxStyle, Path=IsChecked}" Value="False">
+                            <Setter Property="Template" Value="{StaticResource buttonTemplate}"></Setter>
+                            <Setter Property="Background" Value="Silver"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=checkboxStyle, Path=IsChecked}" Value="True">
+                            <Setter Property="Background" Value="WhiteSmoke"/>
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="0.00000000001"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Background="{StaticResource pink}" Tag="~">`</Button>
+                <Button Grid.Column="1" Background="{StaticResource pink}" Tag="!">1</Button>
+                <Button Grid.Column="2" Background="{StaticResource pink}" Tag="@">2</Button>
+                <Button Grid.Column="3" Background="{StaticResource yellow}" Tag="#">3</Button>
+                <Button Grid.Column="4" Background="{StaticResource green}" Tag="$">4</Button>
+                <Button Grid.Column="5" Background="{StaticResource blue}" Tag="%">5</Button>
+                <Button Grid.Column="6" Background="{StaticResource blue}" Tag="^">6</Button>
+                <Button Grid.Column="7" Background="{StaticResource violet}" Tag="&amp;">7</Button>
+                <Button Grid.Column="8" Background="{StaticResource violet}" Tag="*">8</Button>
+                <Button Grid.Column="9" Background="{StaticResource pink}" Tag="(">9</Button>
+                <Button Grid.Column="10" Background="{StaticResource yellow}" Tag=")">0</Button>
+                <Button Grid.Column="11" Background="{StaticResource green}" Tag="_">-</Button>
+                <Button Grid.Column="12" Background="{StaticResource green}" Tag="+">=</Button>
+                <Button Grid.Column="13">Backspace</Button>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0">Tab</Button>
+                <Button Grid.Column="1" Background="{StaticResource pink}" Tag="Q">q</Button>
+                <Button Grid.Column="2" Background="{StaticResource yellow}" Tag="W">w</Button>
+                <Button Grid.Column="3" Background="{StaticResource green}" Tag="E">e</Button>
+                <Button Grid.Column="4" Background="{StaticResource blue}" Tag="R">r</Button>
+                <Button Grid.Column="5" Background="{StaticResource blue}" Tag="T">t</Button>
+                <Button Grid.Column="6" Background="{StaticResource violet}" Tag="Y">y</Button>
+                <Button Grid.Column="7" Background="{StaticResource violet}" Tag="U">u</Button>
+                <Button Grid.Column="8" Background="{StaticResource pink}" Tag="I">i</Button>
+                <Button Grid.Column="9" Background="{StaticResource yellow}" Tag="O">o</Button>
+                <Button Grid.Column="10" Background="{StaticResource green}" Tag="P">p</Button>
+                <Button Grid.Column="11" Background="{StaticResource green}" Tag="{}{">[</Button>
+                <Button Grid.Column="12" Background="{StaticResource green}" Tag="{}}">]</Button>
+                <Button Grid.Column="13" Background="{StaticResource green}" Tag="|">\</Button>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Name="Caps">Caps Lock</Button>
+                <Button Grid.Column="1" Background="{StaticResource pink}" Tag="A">a</Button>
+                <Button Grid.Column="2" Background="{StaticResource yellow}" Tag="S">s</Button>
+                <Button Grid.Column="3" Background="{StaticResource green}" Tag="D">d</Button>
+                <Button Grid.Column="4" Background="{StaticResource blue}" Tag="F">f</Button>
+                <Button Grid.Column="5" Background="{StaticResource blue}" Tag="G">g</Button>
+                <Button Grid.Column="6" Background="{StaticResource violet}" Tag="H">h</Button>
+                <Button Grid.Column="7" Background="{StaticResource violet}" Tag="J">j</Button>
+                <Button Grid.Column="8" Background="{StaticResource pink}" Tag="K">k</Button>
+                <Button Grid.Column="9" Background="{StaticResource yellow}" Tag="L">l</Button>
+                <Button Grid.Column="10" Background="{StaticResource green}" Tag=":">;</Button>
+                <Button Grid.Column="11" Background="{StaticResource green}" Tag="&quot;">'</Button>
+                <Button Grid.Column="13">Enter</Button>
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2.5*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Name="lshift">Shift</Button>
+                <Button Grid.Column="1" Background="{StaticResource pink}" Tag="Z">z</Button>
+                <Button Grid.Column="2" Background="{StaticResource yellow}" Tag="X">x</Button>
+                <Button Grid.Column="3" Background="{StaticResource green}" Tag="C">c</Button>
+                <Button Grid.Column="4" Background="{StaticResource blue}" Tag="V">v</Button>
+                <Button Grid.Column="5" Background="{StaticResource blue}" Tag="B">b</Button>
+                <Button Grid.Column="6" Background="{StaticResource violet}" Tag="N">n</Button>
+                <Button Grid.Column="7" Background="{StaticResource violet}" Tag="M">m</Button>
+                <Button Grid.Column="8" Background="{StaticResource pink}" Tag="&lt;">,</Button>
+                <Button Grid.Column="9" Background="{StaticResource yellow}" Tag="&gt;">.</Button>
+                <Button Grid.Column="10" Background="{StaticResource green}" Tag="?">/</Button>
+                <Button Grid.Column="13" Background="{Binding ElementName=lshift, Path=Background}">Shift</Button>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Name="lctrl">Ctrl</Button>
+                <Button Grid.Column="1" Name="lwin">Win</Button>
+                <Button Grid.Column="2" Name="lalt">Alt</Button>
+                <Button Grid.Column="3" Background="NavajoWhite">Space</Button>
+                <Button Grid.Column="4" Background="{Binding ElementName=lalt, Path=Background}">Alt</Button>
+                <Button Grid.Column="5" Background="{Binding ElementName=lwin, Path=Background}">Win</Button>
+                <Button Grid.Column="13" Background="{Binding ElementName=lctrl, Path=Background}">Ctrl</Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
